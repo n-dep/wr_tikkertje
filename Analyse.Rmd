@@ -1,0 +1,17 @@
+---
+title: "'Analyse tikkertje data"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+Als eerste stap bekijken we de gegevens vergaard tijdens de experimenten. De 'opgekuiste' gegevens zijn als volgt:
+
+```{r print}
+data <- read.csv("data/schone_data.csv")
+data <- data[c("n_spelers", "n_lopers", "n_tikkers", "n_getikt", "duur")]
+knitr::kable(data, col.names = c("# spelers", "# lopers", "# tikers", "# getikt", "duur [sec]"))
+```
+
+
