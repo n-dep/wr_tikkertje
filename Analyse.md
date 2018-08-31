@@ -25,3 +25,6 @@ Het uiteindelijke doel is om een zo goed mogelijke voorspelling te verkrijgen vo
 
 Additiviteit assumptie
 ----------------------
+
+De eerste ruwe benadering die we gebruiken is dat het aantal lopers die netto per seconde worden getikt constant blijft gedurende het spel. Met andere woorden, als we *L*<sub>*t*</sub> gebruiken voor het aantal vrije lopers na *t* seconden en *y* het aantal netto getikten per seconde dan hebben we:
+*L*<sub>*t*</sub> = *N*<sub>0</sub> − *y**t*

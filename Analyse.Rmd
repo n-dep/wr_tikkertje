@@ -20,3 +20,6 @@ Het uiteindelijke doel is om een zo goed mogelijke voorspelling te verkrijgen vo
 Om deze reden zullen we het hier zo simpel mogelijk houden. De enige controleerbare factor is de verhouding van het aantal tikkers ten opzichte van het aantal spelers. Deze kunnen we dan gebruiken om te proberen te voorspellen hoeveel lopers er per tijdseenheid netto uit het spel verdwijnen. Met netto wordt hier bedoeld hoeveel er worden getikt min het aantal getikten die worden bevrijd.
 
 ## Additiviteit assumptie
+
+De eerste ruwe benadering die we gebruiken is dat het aantal lopers die netto per seconde worden getikt constant blijft gedurende het spel. Met andere woorden, als we $L_t$ gebruiken voor het aantal vrije lopers na $t$ seconden en $y$ het aantal netto getikten per seconde dan hebben we:
+$$L_t = N_0 - yt$$
