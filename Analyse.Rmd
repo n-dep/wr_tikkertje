@@ -1,6 +1,8 @@
 ---
 title: "'Analyse tikkertje data'"
-output: github_document
+output:
+      html_document:
+        keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Als eerste stap bekijken we de gegevens vergaard tijdens de experimenten. De 'opgekuiste' gegevens zijn als volgt:
 
-```{r print}
+```{r show_data}
 data <- read.csv("data/schone_data.csv")
 data <- data[c("n_spelers", "n_lopers", "n_tikkers", "n_getikt", "duur")]
 knitr::kable(data, col.names = c("# spelers", "# lopers", "# tikers", "# getikt", "duur [sec]"))
@@ -21,5 +23,5 @@ Om deze reden zullen we het hier zo simpel mogelijk houden. De enige controleerb
 
 ## Additiviteit assumptie
 
-De eerste ruwe benadering die we gebruiken is dat het aantal lopers die netto per seconde worden getikt constant blijft gedurende het spel. Met andere woorden, als we $L_t$ gebruiken voor het aantal vrije lopers na $t$ seconden en $y$ het aantal netto getikten per seconde dan hebben we:
-$$L_t = N_0 - yt$$
+De eerste ruwe benadering die we gebruiken is dat het aantal lopers die netto per seconde worden getikt constant blijft gedurende het spel. Met andere woorden, als we $L_t$ gebruiken voor het aantal vrije lopers na $t$ seconden en $y$ het netto aantal lopers dat per seconde getikt wordt, dan hebben we:
+$$L_t=N_0-yt$$
