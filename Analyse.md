@@ -1,4 +1,4 @@
-'Analyse tikkertje data
+'Analyse tikkertje data'
 ================
 
 Als eerste stap bekijken we de gegevens vergaard tijdens de experimenten. De 'opgekuiste' gegevens zijn als volgt:
