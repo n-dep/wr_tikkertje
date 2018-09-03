@@ -44,7 +44,7 @@ data_mod$color[data_mod$y == 0] <- "red"
 data_mod$pch <- ifelse(data$n_lopers == data$n_getikt, 3, 19)
 opar <- par(mar = c(5.1, 4.1, 1.1, 1.1))
 plot(data_mod$x, data_mod$y, col = data_mod$color, pch = data_mod$pch,
-     main = "", xlab = expression(T[0]/L[0]), ylab = "G per minuut",
+     main = "", xlab = expression(x: T[0]/L[0]), ylab = "y: G per minuut",
      xlim = range(0, range(data_mod$x)))
 text(data_mod$x, data_mod$y, col = data_mod$color, labels = data$n_spelers,
      cex = 0.75, adj = - 0.35)
@@ -53,4 +53,7 @@ text(40 / 1500, 0, col = "lightgray", labels = "40/1500", cex = 0.75, adj = -0.2
 legend("topleft", pch = c(3, 19), legend = c("Iedereen getikt", "Vroegtijdig gestopt"), bty = "n")
 par(opar)
 ```
+Op bovenstaande grafiek zien we effectief een licht stijgend verband tussen de verhouding tikkers-lopers en het aantal getikten per minuut. We zien ook dat deze verhouding groter was in de experimenten met een kleiner aantal spelers (groen tegenover blauw). Verder zien we ook dat het aantal getikten per minuut een stuk hoger lag in de drie spelletjes die effectief beëindigd zijn. Dit laatste zou een logisch artefact kunnen zijn indien de spelletjes steeds beëindigd werden na een aantal minuten. 
+
+
 

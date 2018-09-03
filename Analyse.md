@@ -42,4 +42,7 @@ $$y = f\left(\frac{T}{L + T}\right)$$.
 Deze functie zou in principe aan de volgende eigenschappen moeten voldoen: $f\left(0\right) = 0$, $f\left(1\right) = 0$, $f'\left(0^+\right) > 0$. 
 We beginnen met de bovenstaande gegevens grafisch voor te stellen.
 ![](Analyse_files/figure-html/plot_additief-1.png)<!-- -->
+Op bovenstaande grafiek zien we effectief een licht stijgend verband tussen de verhouding tikkers-lopers en het aantal getikten per minuut. We zien ook dat deze verhouding groter was in de experimenten met een kleiner aantal spelers (groen tegenover blauw). Verder zien we ook dat het aantal getikten per minuut een stuk hoger lag in de drie spelletjes die effectief beëindigd zijn. Dit laatste zou een logisch artefact kunnen zijn indien de spelletjes steeds beëindigd werden na een aantal minuten. 
+
+
 
