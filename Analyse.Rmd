@@ -33,7 +33,7 @@ waar $G_t$ het aantal getikten na $t$ seconden is. We kunnen dan, op basis van d
 $$y = f\left(\frac{T}{L + T}\right)$$.
 Deze functie zou in principe aan de volgende eigenschappen moeten voldoen: $f\left(0\right) = 0$, $f\left(1\right) = 0$, $f'\left(0^+\right) > 0$. 
 We beginnen met de bovenstaande gegevens grafisch voor te stellen.
-```{r plot_additief, echo = FALSE}
+```{r plot_additief}
 data_mod <- data.frame(y = 60 * data$n_getikt / data$duur,
                        x = data$n_tikkers / data$n_lopers,
                        stringsAsFactors = FALSE)
@@ -47,13 +47,59 @@ plot(data_mod$x, data_mod$y, col = data_mod$color, pch = data_mod$pch,
      main = "", xlab = expression(x: T[0]/L[0]), ylab = "y: G per minuut",
      xlim = range(0, range(data_mod$x)))
 text(data_mod$x, data_mod$y, col = data_mod$color, labels = data$n_spelers,
-     cex = 0.75, adj = - 0.35)
+     cex = 0.75, adj = -0.35)
 abline(v = 40 / 1500, lty = "dashed", col = "lightgray")
 text(40 / 1500, 0, col = "lightgray", labels = "40/1500", cex = 0.75, adj = -0.25)
 legend("topleft", pch = c(3, 19), legend = c("Iedereen getikt", "Vroegtijdig gestopt"), bty = "n")
 par(opar)
 ```
-Op bovenstaande grafiek zien we effectief een licht stijgend verband tussen de verhouding tikkers-lopers en het aantal getikten per minuut. We zien ook dat deze verhouding groter was in de experimenten met een kleiner aantal spelers (groen tegenover blauw). Verder zien we ook dat het aantal getikten per minuut een stuk hoger lag in de drie spelletjes die effectief beëindigd zijn. Dit laatste zou een logisch artefact kunnen zijn indien de spelletjes steeds beëindigd werden na een aantal minuten. 
+Op bovenstaande grafiek zien we effectief een licht stijgend verband tussen de verhouding tikkers-lopers en het aantal getikten per minuut. We zien ook dat deze verhouding groter was in de experimenten met een kleiner aantal spelers (groen tegenover blauw). Verder zien we ook dat het aantal getikten per minuut een stuk hoger lag in de drie spelletjes die effectief beëindigd zijn. Dit laatste zou een logisch artefact kunnen zijn indien de spelletjes steeds beëindigd werden na een aantal minuten. Ten slotte is er ook één datapunt dat we als "missing" (vanwege censoring) kunnen omschrijven, weergegeven in bovenstaande grafiek in het rood. Dit punt zullen we weglaten, ondanks onze beperkte dataset, omdat hier een waarde voor te imputeren een grote invloed zal hebben op verdere analyses.
+
+Om te voorspellen wat $y$ zou zijn wanneer er 40 tikkers zijn en 1500 lopers zullen we de volgende modellen proberen:
+$$
+\begin{aligned}
+Model\, 1: y &= \beta_0 + \beta_1 x + \epsilon;\, \epsilon \sim N \left(0, \sigma^2\right)\\
+Model\, 2: y &= \beta_1 + \epsilon; \, \epsilon \sim N \left(0, \sigma^2\right)\\
+Model\, 3: y &= \beta_0 + \beta_1 x + \beta_2 x^2 + \epsilon;\, \epsilon \sim N \left(0, \sigma^2\right) \\
+Model\, 4: y &= \beta_1 x + \beta_2 x^2 + \epsilon;\, \epsilon \sim N \left(0, \sigma^2\right) \\
+Model\, 5: y &= \exp\left[\log(\beta_0) + \beta_1 \log(x) + \beta_2 \log(1 - x) + \epsilon \right];\, \epsilon \sim N \left(0, \sigma^2\right)
+\end{aligned}
+$$
+Modellen 1 en 3 kunnen enkel lokaal correct zijn (gegeven dat $\beta_0$ niet 0 is). Modellen 2 en 4 voorspellen een 0 wanneer $x$ 0 is. Model 5 is niet gedefinieerd wanneer $x$ 0 of 1 is maar is flexibel op het interval $(0, 1)$ (cfr de beta verdelingsfunctie). Deze modellen zijn grafisch voorgesteld in onderstaande grafiek. We kunnen observeren dat model 3 waardeloos is aangezien het een negatief aantal getikten per minuut voorspelt op het punt waar we willen voorspellen: $40 / 1500 \approx 0.027$.
+
+```{r additieve_modellen, echo = FALSE}
+# Guestimate de modellen
+data_mod <- data_mod[data_mod$y > 0, ]
+model_list <- vector(mode = "list", length = 5)
+model_list[[1]] <- lm(y ~ x, data = data_mod)
+model_list[[2]] <- lm(y ~ -1 + x, data = data_mod)
+model_list[[3]] <- lm(y ~ x + I(x ^ 2), data = data_mod)
+model_list[[4]] <- lm(y ~ -1 + x + I(x ^ 2), data = data_mod)
+model_list[[5]] <- lm(I(log(y)) ~ I(log(x)) + I(log(1 - x)), data = data_mod)
+new_x <- 40 / 1500
+pred_list <- lapply(model_list, function(X) predict(X, newdata = data.frame(x = new_x), se.fit = TRUE))
+# voeg predictie curves toe aan plot
+opar <- par(mar = c(5.1, 4.1, 1.1, 1.1))
+plot(data_mod$x, data_mod$y, col = data_mod$color, pch = data_mod$pch,
+     main = "", xlab = expression(x: T[0]/L[0]), ylab = "y: G per minuut",
+     xlim = range(0, range(data_mod$x)), ylim = range(0, range(data_mod$y)), yaxs = "i")
+text(data_mod$x, data_mod$y, col = data_mod$color, labels = data$n_spelers[data$n_getikt > 0], cex = 0.75, adj = -0.35)
+abline(v = 40 / 1500, lty = "dashed", col = "lightgray")
+text(40 / 1500, 12, col = "lightgray", labels = "40/1500", cex = 0.75, adj = -0.25)
+legend("topleft", pch = c(3, 19), legend = c("Iedereen getikt", "Vroegtijdig gestopt"), bty = "n")
+col_pred <- RColorBrewer::brewer.pal(5, "Dark2")
+abline(coef(model_list[[1]]), col = col_pred[1])
+abline(a = 0, b = coef(model_list[[2]]), col = col_pred[2])
+coef_3 <- model_list[[3]]$coefficients
+curve(coef_3[1] + coef_3[2] * x + coef_3[3] * x ^ 2, add = TRUE, col = col_pred[3])
+coef_4 <- model_list[[4]]$coefficients
+curve(coef_4[1] * x + coef_4[2] * x ^ 2, add = TRUE, col = col_pred[4])
+coef_5 <- model_list[[5]]$coefficients
+curve(exp(coef_5[1] + coef_5[2] * log(x) + coef_5[3] * log(1 - x)), add = TRUE, col = col_pred[5])
+legend("left", lty = 1, legend = paste0("Model ", 1:5), col = col_pred, bty = "n")
+par(opar)
+```
+
 
 
 
